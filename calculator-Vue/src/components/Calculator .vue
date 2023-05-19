@@ -41,71 +41,64 @@
 <script setup>
 import ButtonComponents from '../components/ButtonComponent.vue'
 import { ref } from 'vue';
-import axios from 'axios';
+import {equalApi} from '../apis/'
+
+// variable 
 
 let current=ref('');
-let operator=null;
 let history =[];
 let solve='';
 let state=true;
 
-    const clear=()=>{
-      state=true
-      current.value=''
-    };
-    const sign=()=>{
-         current.value = current.value.toString().charAt(0) === '-' ?
-        current.value.toString().slice(1) : `-${current.value}`;
-    };
-    const persent=()=>{
-      current.value = `${parseFloat(current.value)/100}`
-    };
-    const append=(number)=>{
-      current.value = `${current.value}${number}`
-    };
-    const dot=()=>{
-      const lastIndex = current.value.length - 1;
-      if (lastIndex >= 0 && current.value[lastIndex] !== '.') {
-        append('.');
-      }
-    };
 
+// method 
+const clear=()=>{
+  state=true
+  current.value=''
+};
+const sign=()=>{
+      current.value = current.value.toString().charAt(0) === '-' ?
+    current.value.toString().slice(1) : `-${current.value}`;
+};
+const persent=()=>{
+  current.value = `${parseFloat(current.value)/100}`
+};
+const append=(number)=>{
+  current.value = `${current.value}${number}`
+};
+const dot=()=>{
+  const lastIndex = current.value.length - 1;
+  if (lastIndex >= 0 && current.value[lastIndex] !== '.') {
+    append('.');
+  }
+};
 
-    const equal = async ()=>{
-      try {
-        const response = await axios.post('http://127.0.0.1:8000/calculator', {
-          current: current.value,
-        });
-        console.log(response);
-        solve = current.value + '='
-        solve = solve + response.data;
-        current.value = response.data;
-        history.push(solve)
-        console.log(solve)
-      } catch (error) {
-        console.error(error); // Handle the error
-      }
+const equal = async ()=>{
+  const params = {
+      current:current.value
     }
+  try {
+    const response = await equalApi(params);
+    solve = current.value + '='
+    solve = solve + response.data;
+    current.value = response.data;
+    history.push(solve)
+    console.log(solve)
+  } catch (error) {
+    console.error(error); // Handle the error
+  }
+}
 
-    const histories=()=>{
-      state = false
-      current.value = history
-    }
-
+const histories=()=>{
+  state = false
+  current.value = history
+}
 
 </script>
 
 
 <style scoped>
 
-.calculator{
-  margin: 0 auto;
-  width: 400px;
-  font-size: 40px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-auto-rows: minmax(50px, auto);
-}
 .display{
   display: flex;
   align-items: center;

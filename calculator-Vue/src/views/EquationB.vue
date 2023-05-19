@@ -1,20 +1,26 @@
 <script setup>
 import { ref } from 'vue';
-import axios from 'axios';
+import {CalculateEquationB} from '../apis/';
+
+// variable
+
 const valueA = ref('');
 const valueB = ref('');
 const valueC = ref('');
 const resultat = ref(false);
 const equation = ref('exemple : 3X² + -6X + -2 =0 ===> X1 = -2.61 and X2 = 20.61  ');
+
+// method 
+
 const Calculate = async ()=>{
+    const params = {
+        valueA: valueA.value,
+        valueB: valueB.value,
+        valueC: valueC.value
+    };
     
     try {
-        const response = await axios.post('http://127.0.0.1:8000/EquationB', {
-            valueA: valueA.value,
-            valueB: valueB.value,
-            valueC: valueC.value,
-
-        });
+        const response = await CalculateEquationB(params);
         equation.value= 'resultat: '+valueA.value+'X² + '+valueB.value+'X +'+valueC.value+'=0  ===> X='+response.data;
         resultat.value = true;
       } catch (error) {

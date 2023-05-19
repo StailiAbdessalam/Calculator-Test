@@ -23,7 +23,7 @@ class CalculatorController extends Controller
         return response()->json(0);
 
         }else{
-            $result = $valueA/$valueB;
+            $result = $valueB/$valueA;
             return response()->json($result);
         }
       
